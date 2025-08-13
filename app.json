@@ -13,14 +13,20 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.imbagila.speedhack"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.NFC",
+        "android.permission.NFC"
+      ],
+      "package": "com.imbagila.speedhack"
     },
     "web": {
       "favicon": "./assets/favicon.png"

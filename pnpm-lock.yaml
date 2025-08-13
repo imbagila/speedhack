@@ -32,6 +32,9 @@ importers:
       react-native:
         specifier: 0.79.5
         version: 0.79.5(@babel/core@7.28.0)(@types/react@19.0.14)(react@19.0.0)
+      react-native-nfc-manager:
+        specifier: ^3.16.2
+        version: 3.16.2(@expo/config-plugins@10.1.2)
       react-native-safe-area-context:
         specifier: ^5.6.0
         version: 5.6.0(react-native@0.79.5(@babel/core@7.28.0)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
@@ -2119,6 +2122,14 @@ packages:
     peerDependencies:
       react: '*'
       react-native: '*'
+
+  react-native-nfc-manager@3.16.2:
+    resolution: {integrity: sha512-4VNDr4/Y/Rg/4Px8Mz2/bkuE4cS/xVU81L24iS8O4gazwJsfmMmrOeFPriBa8mRhlPUE6PwP9OzkzS7svK0iBg==}
+    peerDependencies:
+      '@expo/config-plugins': 9 || 10
+    peerDependenciesMeta:
+      '@expo/config-plugins':
+        optional: true
 
   react-native-safe-area-context@5.6.0:
     resolution: {integrity: sha512-tJas3YOdsuCg3kepCTGF3LWZp9onMbb9Agju2xfs2kRX8d/5TMUPmupBpjerk/B7Tv/zeJnk+qp5neA96Y0otQ==}
@@ -5213,6 +5224,10 @@ snapshots:
     dependencies:
       react: 19.0.0
       react-native: 0.79.5(@babel/core@7.28.0)(@types/react@19.0.14)(react@19.0.0)
+
+  react-native-nfc-manager@3.16.2(@expo/config-plugins@10.1.2):
+    optionalDependencies:
+      '@expo/config-plugins': 10.1.2
 
   react-native-safe-area-context@5.6.0(react-native@0.79.5(@babel/core@7.28.0)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0):
     dependencies:
