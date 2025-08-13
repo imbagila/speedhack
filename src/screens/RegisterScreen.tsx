@@ -33,10 +33,10 @@ export default function RegisterScreen({ route, navigation }: Props) {
         <View style={styles.container}>
             <Text style={styles.header}>Register</Text>
             <Text style={styles.sub}>Card: {cardId}</Text>
-            <TextInput style={styles.input} placeholder="Fullname" value={fullName} onChangeText={setFullName} />
-            <TextInput style={styles.input} placeholder="Email Address" keyboardType="email-address" value={email} onChangeText={setEmail} />
-            <TextInput style={styles.input} placeholder="Date of Birth (YYYY-MM-DD)" value={dateOfBirth} onChangeText={setDateOfBirth} />
-            <TextInput style={styles.input} placeholder="Phone Number" keyboardType="phone-pad" value={phoneNumber} onChangeText={setPhoneNumber} />
+            <TextInput style={styles.input} placeholder="Fullname" placeholderTextColor="#999" value={fullName} onChangeText={setFullName} />
+            <TextInput style={styles.input} placeholder="Email Address" placeholderTextColor="#999" keyboardType="email-address" value={email} onChangeText={setEmail} />
+            <TextInput style={styles.input} placeholder="Date of Birth (YYYY-MM-DD)" placeholderTextColor="#999" value={dateOfBirth} onChangeText={setDateOfBirth} />
+            <TextInput style={styles.input} placeholder="Phone Number" placeholderTextColor="#999" keyboardType="phone-pad" value={phoneNumber} onChangeText={setPhoneNumber} />
             <View style={styles.genderRow}>
                 <Pressable onPress={() => setGender('Male')} style={[styles.checkbox, gender === 'Male' && styles.checkboxActive]}>
                     <Text style={styles.checkboxText}>Male</Text>
@@ -48,8 +48,8 @@ export default function RegisterScreen({ route, navigation }: Props) {
                     <Text style={styles.checkboxText}>Other</Text>
                 </Pressable>
             </View>
-            <TextInput style={styles.input} placeholder="PIN" value={pin} onChangeText={setPin} secureTextEntry keyboardType="number-pad" />
-            <TextInput style={styles.input} placeholder="PIN Confirmation" value={pinConfirm} onChangeText={setPinConfirm} secureTextEntry keyboardType="number-pad" />
+            <TextInput style={styles.input} placeholder="PIN" placeholderTextColor="#999" value={pin} onChangeText={setPin} secureTextEntry keyboardType="number-pad" />
+            <TextInput style={styles.input} placeholder="PIN Confirmation" placeholderTextColor="#999" value={pinConfirm} onChangeText={setPinConfirm} secureTextEntry keyboardType="number-pad" />
             <Pressable
                 disabled={!isValid}
                 style={[styles.button, !isValid && styles.buttonDisabled]}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, gap: 12 },
     header: { fontSize: 22, fontWeight: '700', marginTop: 12 },
     sub: { color: '#666' },
-    input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10 },
+    input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, color: '#111' },
     genderRow: { flexDirection: 'row', gap: 8, marginVertical: 4 },
     checkbox: { borderWidth: 1, borderColor: '#aaa', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8 },
     checkboxActive: { backgroundColor: '#4B7BE5', borderColor: '#4B7BE5' },

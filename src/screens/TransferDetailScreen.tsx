@@ -33,8 +33,8 @@ export default function TransferDetailScreen({ route, navigation }: Props) {
             <Text>Gender: {destination.gender}</Text>
             <Text>Phone: {destination.phoneNumber}</Text>
 
-            <TextInput style={styles.input} placeholder="Amount to be Transfered" keyboardType="numeric" value={amount} onChangeText={setAmount} />
-            <TextInput style={styles.input} placeholder="PIN Transaction" secureTextEntry keyboardType="number-pad" value={pin} onChangeText={setPin} />
+            <TextInput style={styles.input} placeholder="Amount to be Transfered" placeholderTextColor="#999" keyboardType="numeric" value={amount} onChangeText={setAmount} />
+            <TextInput style={styles.input} placeholder="PIN Transaction" placeholderTextColor="#999" secureTextEntry keyboardType="number-pad" value={pin} onChangeText={setPin} />
 
             <Pressable
                 disabled={!isValid}
@@ -56,7 +56,7 @@ export default function TransferDetailScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, gap: 12 },
     header: { fontSize: 22, fontWeight: '700', marginTop: 12 },
-    input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10 },
+    input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, color: '#111' },
     button: { backgroundColor: '#0E9F6E', paddingVertical: 12, borderRadius: 8, alignItems: 'center', marginTop: 12 },
     buttonDisabled: { backgroundColor: '#a7dacb' },
     buttonText: { color: 'white', fontWeight: '700' },

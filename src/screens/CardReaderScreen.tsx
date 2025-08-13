@@ -12,8 +12,10 @@ export default function CardReaderScreen({ navigation }: Props) {
     const { getUserByCardId, setSelectedSourceCard, seedDemoData } = useWalletStore();
 
     useEffect(() => {
+        let isActive = true;
         seedDemoData();
         onNfcTap((cardId) => {
+            if (!isActive) return;
             setSelectedSourceCard(cardId);
             const existing = getUserByCardId(cardId);
             if (existing) {
@@ -22,7 +24,10 @@ export default function CardReaderScreen({ navigation }: Props) {
                 navigation.replace('Register', { cardId });
             }
         });
-        return () => clearNfcTap();
+        return () => {
+            isActive = false;
+            clearNfcTap();
+        };
     }, [getUserByCardId, navigation, seedDemoData, setSelectedSourceCard]);
 
     return (

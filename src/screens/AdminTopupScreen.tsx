@@ -16,7 +16,7 @@ export default function AdminTopupScreen({ navigation }: Props) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Force Topup</Text>
-            <TextInput style={styles.input} placeholder="Topup amount" keyboardType="numeric" value={amount} onChangeText={setAmount} />
+            <TextInput style={styles.input} placeholder="Topup amount" placeholderTextColor="#999" keyboardType="numeric" value={amount} onChangeText={setAmount} />
             <Pressable
                 disabled={!isValid}
                 style={[styles.button, !isValid && styles.buttonDisabled]}
@@ -36,7 +36,7 @@ export default function AdminTopupScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, gap: 12, alignItems: 'center', justifyContent: 'center' },
     title: { fontSize: 20, fontWeight: '700', textAlign: 'center', marginBottom: 12 },
-    input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, minWidth: 240 },
+    input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, minWidth: 240, color: '#111' },
     button: { backgroundColor: '#0E9F6E', paddingVertical: 12, borderRadius: 8, alignItems: 'center', marginTop: 12, minWidth: 240 },
     buttonDisabled: { backgroundColor: '#a7dacb' },
     buttonText: { color: 'white', fontWeight: '700' },

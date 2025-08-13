@@ -29,8 +29,26 @@ export async function onNfcTap(listener: Listener) {
         NfcManager.unregisterTagEvent().catch(() => {});
     });
     try {
-        await NfcManager.registerTagEvent();
-    } catch {}
+        const readerModeFlags =
+            // NFC types
+            0x1 | // FLAG_READER_NFC_A
+            0x2 | // FLAG_READER_NFC_B
+            0x4 | // FLAG_READER_NFC_F
+            0x8 | // FLAG_READER_NFC_V
+            0x80 | // FLAG_READER_SKIP_NDEF_CHECK
+            0x100; // FLAG_READER_NO_PLATFORM_SOUNDS
+
+        await NfcManager.registerTagEvent({
+            alertMessage: 'Hold a card near the device',
+            invalidateAfterFirstRead: true,
+            isReaderModeEnabled: true,
+            readerModeFlags,
+        } as any);
+    } catch (e) {
+        try {
+            await NfcManager.registerTagEvent();
+        } catch {}
+    }
 }
 
 export function clearNfcTap() {
