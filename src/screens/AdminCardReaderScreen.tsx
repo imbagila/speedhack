@@ -9,16 +9,20 @@ import { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'AdminCardReader'>;
 
 export default function AdminCardReaderScreen({ navigation }: Props) {
-    const { setSelectedDestinationCard, usersByCardId } = useWalletStore();
+    const { setSelectedDestinationCard, usersByCardId, pendingTopupAmount, topup, setPendingTopupAmount } = useWalletStore();
 
     useEffect(() => {
         onNfcTap((cardId) => {
             if (!usersByCardId[cardId]) return;
             setSelectedDestinationCard(cardId);
-            navigation.replace('AdminTopupSuccess');
+            if (pendingTopupAmount && pendingTopupAmount > 0) {
+                topup(cardId, pendingTopupAmount);
+                setPendingTopupAmount(null);
+                navigation.replace('AdminTopupSuccess');
+            }
         });
         return () => clearNfcTap();
-    }, [navigation, setSelectedDestinationCard, usersByCardId]);
+    }, [navigation, pendingTopupAmount, setPendingTopupAmount, setSelectedDestinationCard, topup, usersByCardId]);
 
     return (
         <View style={styles.container}>

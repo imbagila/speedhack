@@ -8,10 +8,9 @@ type Props = NativeStackScreenProps<RootStackParamList, 'AdminTopup'>;
 
 export default function AdminTopupScreen({ navigation }: Props) {
     const [amount, setAmount] = useState('');
-    const selectedCardId = useWalletStore((s) => s.selectedDestinationCardId);
-    const topup = useWalletStore((s) => s.topup);
+    const setPendingTopupAmount = useWalletStore((s) => s.setPendingTopupAmount);
 
-    const isValid = useMemo(() => Number(amount) > 0 && !!selectedCardId, [amount, selectedCardId]);
+    const isValid = useMemo(() => Number(amount) > 0, [amount]);
 
     return (
         <View style={styles.container}>
@@ -21,14 +20,13 @@ export default function AdminTopupScreen({ navigation }: Props) {
                 disabled={!isValid}
                 style={[styles.button, !isValid && styles.buttonDisabled]}
                 onPress={() => {
-                    if (!selectedCardId) return;
-                    topup(selectedCardId, Number(amount));
-                    navigation.replace('AdminTopupSuccess');
+                    setPendingTopupAmount(Number(amount));
+                    navigation.replace('AdminCardReader');
                 }}
             >
                 <Text style={styles.buttonText}>Force Topup</Text>
             </Pressable>
-            {!selectedCardId && <Text style={styles.hint}>Tap a card first in Admin Card Reader</Text>}
+            <Text style={styles.hint}>After submitting, scan the destination card</Text>
         </View>
     );
 }
