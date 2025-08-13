@@ -11,13 +11,16 @@ import AdminTopupScreen from './src/screens/AdminTopupScreen';
 import AdminCardReaderScreen from './src/screens/AdminCardReaderScreen';
 import AdminTopupSuccessScreen from './src/screens/AdminTopupSuccessScreen';
 import { RootStackParamList } from './src/navigation/types';
+import HomeScreen from './src/screens/HomeScreen';
+import AdminPinScreen from './src/screens/AdminPinScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="CardReader">
+            <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
                 <Stack.Screen name="CardReader" component={CardReaderScreen} options={{ title: 'Card Reader' }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register' }} />
                 <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
@@ -25,6 +28,7 @@ export default function App() {
                 <Stack.Screen name="TransferDetail" component={TransferDetailScreen} options={{ title: 'Transfer Detail' }} />
                 <Stack.Screen name="TransferSuccess" component={TransferSuccessScreen} options={{ title: 'Success' }} />
                 <Stack.Screen name="AdminTopup" component={AdminTopupScreen} options={{ title: 'Force Topup' }} />
+                <Stack.Screen name="AdminPin" component={AdminPinScreen} options={{ title: 'Admin PIN' }} />
                 <Stack.Screen name="AdminCardReader" component={AdminCardReaderScreen} options={{ title: 'Admin Card Reader' }} />
                 <Stack.Screen name="AdminTopupSuccess" component={AdminTopupSuccessScreen} options={{ title: 'Topup Success' }} />
             </Stack.Navigator>
