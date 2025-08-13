@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CardReaderScreen from './src/screens/CardReaderScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import DestinationReaderScreen from './src/screens/DestinationReaderScreen';
+import TransferDetailScreen from './src/screens/TransferDetailScreen';
+import TransferSuccessScreen from './src/screens/TransferSuccessScreen';
+import AdminTopupScreen from './src/screens/AdminTopupScreen';
+import AdminCardReaderScreen from './src/screens/AdminCardReaderScreen';
+import AdminTopupSuccessScreen from './src/screens/AdminTopupSuccessScreen';
+import { RootStackParamList } from './src/navigation/types';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="CardReader">
+                <Stack.Screen name="CardReader" component={CardReaderScreen} options={{ title: 'Card Reader' }} />
+                <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register' }} />
+                <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+                <Stack.Screen name="DestinationReader" component={DestinationReaderScreen} options={{ title: 'Destination Reader' }} />
+                <Stack.Screen name="TransferDetail" component={TransferDetailScreen} options={{ title: 'Transfer Detail' }} />
+                <Stack.Screen name="TransferSuccess" component={TransferSuccessScreen} options={{ title: 'Success' }} />
+                <Stack.Screen name="AdminTopup" component={AdminTopupScreen} options={{ title: 'Force Topup' }} />
+                <Stack.Screen name="AdminCardReader" component={AdminCardReaderScreen} options={{ title: 'Admin Card Reader' }} />
+                <Stack.Screen name="AdminTopupSuccess" component={AdminTopupSuccessScreen} options={{ title: 'Topup Success' }} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
