@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useWalletStore } from '../store/useWalletStore';
 import { onNfcTap, clearNfcTap } from '../utils/nfc';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -16,7 +16,10 @@ export default function AdminCardReaderScreen({ navigation }: Props) {
             if (hasProcessedRef.current) return;
             if (!usersByCardId[cardId]) {
                 const remote = await loadUserFromRemote(cardId);
-                if (!remote) return;
+                if (!remote) {
+                    Alert.alert('Card not registered', 'This card is not registered yet.');
+                    return;
+                }
             }
             setSelectedDestinationCard(cardId);
             if (pendingTopupAmount && pendingTopupAmount > 0) {

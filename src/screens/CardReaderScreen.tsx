@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useWalletStore } from '../store/useWalletStore';
 import { onNfcTap, clearNfcTap } from '../utils/nfc';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -22,7 +22,7 @@ export default function CardReaderScreen({ navigation }: Props) {
             if (existing) {
                 navigation.replace('Profile', { cardId });
             } else {
-                navigation.replace('Register', { cardId });
+                Alert.alert('Card not registered', 'This card is not registered yet.');
             }
         });
         return () => {

@@ -2,6 +2,10 @@ export type RootStackParamList = {
     Home: undefined;
     CardReader: undefined;
     Register: { cardId: string };
+    RegisterPin: undefined;
+    RegisterCardReader: undefined;
+    RegisterSuccess: { cardId: string };
+    RegisterAlreadyRegistered: { cardId: string };
     Profile: { cardId: string };
     DestinationReader: undefined;
     TransferDetail: { destinationCardId: string };

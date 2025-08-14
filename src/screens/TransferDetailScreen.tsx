@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { useWalletStore } from '../store/useWalletStore';
@@ -11,6 +11,7 @@ export default function TransferDetailScreen({ route, navigation }: Props) {
     const destination = useWalletStore((s) => s.usersByCardId[destinationCardId]);
     const sourceCardId = useWalletStore((s) => s.selectedSourceCardId);
     const transfer = useWalletStore((s) => s.transfer);
+    const source = useWalletStore((s) => (s.selectedSourceCardId ? s.usersByCardId[s.selectedSourceCardId] : undefined));
 
     const [amount, setAmount] = useState('');
     const [pin, setPin] = useState('');
@@ -41,7 +42,12 @@ export default function TransferDetailScreen({ route, navigation }: Props) {
                 style={[styles.button, !isValid && styles.buttonDisabled]}
                 onPress={async () => {
                     if (!sourceCardId) return;
-                    const ok = await transfer(sourceCardId, destinationCardId, Number(amount), pin);
+                    const amt = Number(amount);
+                    if (!source || source.balance < amt) {
+                        Alert.alert('Insufficient balance', 'Amount is not enough.');
+                        return;
+                    }
+                    const ok = await transfer(sourceCardId, destinationCardId, amt, pin);
                     if (ok) {
                         navigation.replace('TransferSuccess');
                     }

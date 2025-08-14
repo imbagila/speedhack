@@ -14,7 +14,10 @@ export default function HomeScreen({ navigation }: Props) {
                 <Text style={styles.buttonText}>Do Payment</Text>
             </Pressable>
             <Pressable style={styles.buttonSecondary} onPress={() => navigation.navigate('AdminPin')}>
-                <Text style={styles.buttonText}>Topup (Superadmin)</Text>
+                <Text style={styles.buttonText}>Force Topup</Text>
+            </Pressable>
+            <Pressable style={styles.buttonTertiary} onPress={() => navigation.navigate('RegisterPin')}>
+                <Text style={styles.buttonText}>Register</Text>
             </Pressable>
         </View>
     );
@@ -26,6 +29,7 @@ const styles = StyleSheet.create({
     logo: { width: 200, height: 200, marginBottom: 8 },
     buttonPrimary: { backgroundColor: '#4B7BE5', paddingVertical: 14, paddingHorizontal: 24, borderRadius: 10, minWidth: 200, alignItems: 'center' },
     buttonSecondary: { backgroundColor: '#0E9F6E', paddingVertical: 14, paddingHorizontal: 24, borderRadius: 10, minWidth: 200, alignItems: 'center' },
+    buttonTertiary: { backgroundColor: '#6B7280', paddingVertical: 14, paddingHorizontal: 24, borderRadius: 10, minWidth: 200, alignItems: 'center' },
     buttonText: { color: 'white', fontWeight: '700' },
 });
 

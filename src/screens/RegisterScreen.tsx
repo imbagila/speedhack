@@ -55,7 +55,7 @@ export default function RegisterScreen({ route, navigation }: Props) {
                 disabled={!isValid}
                 style={[styles.button, !isValid && styles.buttonDisabled]}
                 onPress={async () => {
-                    await registerUser(cardId, {
+                    const user = await registerUser(cardId, {
                         fullName,
                         email,
                         dateOfBirth,
@@ -63,7 +63,9 @@ export default function RegisterScreen({ route, navigation }: Props) {
                         gender,
                         pin,
                     });
-                    navigation.replace('Profile', { cardId });
+                    if (user) {
+                        navigation.replace('RegisterSuccess', { cardId });
+                    }
                 }}
             >
                 <Text style={styles.buttonText}>Register</Text>

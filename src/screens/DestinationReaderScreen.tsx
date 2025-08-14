@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useWalletStore } from '../store/useWalletStore';
 import { onNfcTap, clearNfcTap } from '../utils/nfc';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -14,7 +14,10 @@ export default function DestinationReaderScreen({ navigation }: Props) {
         onNfcTap(async (cardId) => {
             if (!usersByCardId[cardId]) {
                 const remote = await loadUserFromRemote(cardId);
-                if (!remote) return;
+                if (!remote) {
+                    Alert.alert('Card not registered', 'Destination card is not registered yet.');
+                    return;
+                }
             }
             setSelectedDestinationCard(cardId);
             navigation.replace('TransferDetail', { destinationCardId: cardId });

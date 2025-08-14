@@ -4,6 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CardReaderScreen from './src/screens/CardReaderScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import RegisterPinScreen from './src/screens/RegisterPinScreen';
+import RegisterCardReaderScreen from './src/screens/RegisterCardReaderScreen';
+import RegisterSuccessScreen from './src/screens/RegisterSuccessScreen';
+import RegisterAlreadyRegisteredScreen from './src/screens/RegisterAlreadyRegisteredScreen';
 import DestinationReaderScreen from './src/screens/DestinationReaderScreen';
 import TransferDetailScreen from './src/screens/TransferDetailScreen';
 import TransferSuccessScreen from './src/screens/TransferSuccessScreen';
@@ -23,6 +27,10 @@ export default function App() {
                 <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
                 <Stack.Screen name="CardReader" component={CardReaderScreen} options={{ title: 'Card Reader' }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register' }} />
+                <Stack.Screen name="RegisterPin" component={RegisterPinScreen} options={{ title: 'Admin PIN' }} />
+                <Stack.Screen name="RegisterCardReader" component={RegisterCardReaderScreen} options={{ title: 'Register Card Reader' }} />
+                <Stack.Screen name="RegisterSuccess" component={RegisterSuccessScreen} options={{ title: 'Register Success' }} />
+                <Stack.Screen name="RegisterAlreadyRegistered" component={RegisterAlreadyRegisteredScreen} options={{ title: 'Already Registered' }} />
                 <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
                 <Stack.Screen name="DestinationReader" component={DestinationReaderScreen} options={{ title: 'Destination Reader' }} />
                 <Stack.Screen name="TransferDetail" component={TransferDetailScreen} options={{ title: 'Transfer Detail' }} />
