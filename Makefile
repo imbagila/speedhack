@@ -14,4 +14,4 @@ build:
 	export EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
 	export EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 	cd android && ./gradlew assembleRelease
-	cp android/app/build/outputs/apk/release/app-release.apk ./civil-card-payment.apk
+	cp android/app/build/outputs/apk/release/app-release.apk ./speedhack.apk
