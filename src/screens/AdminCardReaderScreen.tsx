@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useWalletStore } from '../store/useWalletStore';
 import { onNfcTap, clearNfcTap } from '../utils/nfc';
@@ -9,17 +9,22 @@ type Props = NativeStackScreenProps<RootStackParamList, 'AdminCardReader'>;
 
 export default function AdminCardReaderScreen({ navigation }: Props) {
     const { setSelectedDestinationCard, usersByCardId, pendingTopupAmount, topup, setPendingTopupAmount, loadUserFromRemote } = useWalletStore();
+    const hasProcessedRef = useRef(false);
 
     useEffect(() => {
         onNfcTap(async (cardId) => {
+            if (hasProcessedRef.current) return;
             if (!usersByCardId[cardId]) {
                 const remote = await loadUserFromRemote(cardId);
                 if (!remote) return;
             }
             setSelectedDestinationCard(cardId);
             if (pendingTopupAmount && pendingTopupAmount > 0) {
-                await topup(cardId, pendingTopupAmount);
+                hasProcessedRef.current = true;
+                const amount = pendingTopupAmount;
                 setPendingTopupAmount(null);
+                await topup(cardId, amount);
+                clearNfcTap();
                 navigation.replace('AdminTopupSuccess');
             }
         });

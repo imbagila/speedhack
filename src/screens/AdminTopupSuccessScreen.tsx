@@ -25,7 +25,7 @@ export default function AdminTopupSuccessScreen({ navigation }: Props) {
             <Text>Gender: {userSnapshot.gender}</Text>
             <Text>Phone: {userSnapshot.phoneNumber}</Text>
             <Text>Topup amount: {amount.toLocaleString()}</Text>
-            <Pressable style={styles.button} onPress={() => navigation.replace('AdminCardReader')}>
+            <Pressable style={styles.button} onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Home' as never }] as any })}>
                 <Text style={styles.buttonText}>OK</Text>
             </Pressable>
         </View>
