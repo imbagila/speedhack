@@ -44,26 +44,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     lastTransfer: null,
     lastTopup: null,
     pendingTopupAmount: null,
-    seedDemoData: async () => {
-        const existing = get().usersByCardId;
-        if (Object.keys(existing).length > 0) return;
-        const now = new Date().toISOString();
-        const destination: UserProfile = {
-            cardId: 'CARD_2',
-            fullName: 'Destination User',
-            email: 'dest@example.com',
-            dateOfBirth: '1990-01-01',
-            phoneNumber: '+620000000002',
-            gender: 'Female',
-            registerDate: now,
-            balance: 250000,
-            pin: '123456',
-        };
-        set({ usersByCardId: { [destination.cardId]: destination } });
-        try {
-            await saveUserProfile(destination);
-        } catch {}
-    },
+    seedDemoData: async () => {},
     getUserByCardId: (cardId) => get().usersByCardId[cardId],
     setSelectedSourceCard: (cardId) => set({ selectedSourceCardId: cardId }),
     setSelectedDestinationCard: (cardId) => set({ selectedDestinationCardId: cardId }),
@@ -124,7 +105,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
         if (!source || !dest) return false;
         if (pin !== source.pin) return false;
         if (amount <= 0) return false;
-        if (source.balance < amount) return false;
+        // allow negative balances per request
         set(
             produce<WalletState>((draft) => {
                 draft.usersByCardId[sourceCardId].balance -= amount;

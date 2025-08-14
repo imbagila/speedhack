@@ -9,11 +9,10 @@ import { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'CardReader'>;
 
 export default function CardReaderScreen({ navigation }: Props) {
-    const { getUserByCardId, setSelectedSourceCard, seedDemoData, loadUserFromRemote } = useWalletStore();
+    const { getUserByCardId, setSelectedSourceCard, loadUserFromRemote } = useWalletStore();
 
     useEffect(() => {
         let isActive = true;
-        seedDemoData();
         onNfcTap(async (cardId) => {
             if (!isActive) return;
             setSelectedSourceCard(cardId);
@@ -31,7 +30,7 @@ export default function CardReaderScreen({ navigation }: Props) {
             isActive = false;
             clearNfcTap();
         };
-    }, [getUserByCardId, navigation, seedDemoData, setSelectedSourceCard, loadUserFromRemote]);
+    }, [getUserByCardId, navigation, setSelectedSourceCard, loadUserFromRemote]);
 
     return (
         <View style={styles.container}>
