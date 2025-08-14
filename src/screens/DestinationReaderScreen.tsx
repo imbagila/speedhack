@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { RotatingCircle } from '../components/RotatingCircle';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useWalletStore } from '../store/useWalletStore';
 import { onNfcTap, clearNfcTap } from '../utils/nfc';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -26,7 +25,7 @@ export default function DestinationReaderScreen({ navigation }: Props) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Please Tap Destination ID Card Here</Text>
-            <RotatingCircle />
+            <ActivityIndicator size="large" />
             <Text style={styles.hint}>Hold a card near the device</Text>
         </View>
     );
