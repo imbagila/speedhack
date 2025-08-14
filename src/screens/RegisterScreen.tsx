@@ -2,7 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { useWalletStore, Gender } from '../store/useWalletStore';
+import { useWalletStore } from '../store/useWalletStore';
+import type { Gender } from '../types/user';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -53,8 +54,8 @@ export default function RegisterScreen({ route, navigation }: Props) {
             <Pressable
                 disabled={!isValid}
                 style={[styles.button, !isValid && styles.buttonDisabled]}
-                onPress={() => {
-                    registerUser(cardId, {
+                onPress={async () => {
+                    await registerUser(cardId, {
                         fullName,
                         email,
                         dateOfBirth,

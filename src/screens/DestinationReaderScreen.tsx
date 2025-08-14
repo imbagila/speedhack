@@ -9,16 +9,19 @@ import { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'DestinationReader'>;
 
 export default function DestinationReaderScreen({ navigation }: Props) {
-    const { setSelectedDestinationCard, usersByCardId } = useWalletStore();
+    const { setSelectedDestinationCard, usersByCardId, loadUserFromRemote } = useWalletStore();
 
     useEffect(() => {
-        onNfcTap((cardId) => {
-            if (!usersByCardId[cardId]) return;
+        onNfcTap(async (cardId) => {
+            if (!usersByCardId[cardId]) {
+                const remote = await loadUserFromRemote(cardId);
+                if (!remote) return;
+            }
             setSelectedDestinationCard(cardId);
             navigation.replace('TransferDetail', { destinationCardId: cardId });
         });
         return () => clearNfcTap();
-    }, [navigation, setSelectedDestinationCard, usersByCardId]);
+    }, [navigation, setSelectedDestinationCard, usersByCardId, loadUserFromRemote]);
 
     return (
         <View style={styles.container}>

@@ -39,9 +39,9 @@ export default function TransferDetailScreen({ route, navigation }: Props) {
             <Pressable
                 disabled={!isValid}
                 style={[styles.button, !isValid && styles.buttonDisabled]}
-                onPress={() => {
+                onPress={async () => {
                     if (!sourceCardId) return;
-                    const ok = transfer(sourceCardId, destinationCardId, Number(amount), pin);
+                    const ok = await transfer(sourceCardId, destinationCardId, Number(amount), pin);
                     if (ok) {
                         navigation.replace('TransferSuccess');
                     }

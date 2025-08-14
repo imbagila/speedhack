@@ -1,19 +1,8 @@
 import { create } from 'zustand';
 import { produce } from 'immer';
+import { saveUserProfile, updateUserAmount, getUserProfile } from '../utils';
+import type { UserProfile, Gender } from '../types/user';
 
-export type Gender = 'Male' | 'Female' | 'Other';
-
-export type UserProfile = {
-    cardId: string;
-    fullName: string;
-    email: string;
-    dateOfBirth: string; // ISO string YYYY-MM-DD
-    phoneNumber: string;
-    gender: Gender;
-    registerDate: string; // ISO datetime string
-    balance: number;
-    pin: string; // simple numeric string
-};
 
 type LastTransfer = {
     sourceCardId: string;
@@ -36,14 +25,16 @@ type WalletState = {
     lastTopup: LastTopup | null;
     pendingTopupAmount: number | null;
     // actions
-    seedDemoData: () => void;
+    seedDemoData: () => Promise<void>;
     getUserByCardId: (cardId: string) => UserProfile | undefined;
     setSelectedSourceCard: (cardId: string | null) => void;
     setSelectedDestinationCard: (cardId: string | null) => void;
     setPendingTopupAmount: (amount: number | null) => void;
-    registerUser: (cardId: string, profile: Omit<UserProfile, 'cardId' | 'registerDate' | 'balance'>) => UserProfile;
-    topup: (cardId: string, amount: number) => UserProfile | undefined;
-    transfer: (sourceCardId: string, destinationCardId: string, amount: number, pin: string) => boolean;
+    registerUser: (cardId: string, profile: Omit<UserProfile, 'cardId' | 'registerDate' | 'balance'>) => Promise<UserProfile>;
+    topup: (cardId: string, amount: number) => Promise<UserProfile | undefined>;
+    transfer: (sourceCardId: string, destinationCardId: string, amount: number, pin: string) => Promise<boolean>;
+    // firestore sync
+    loadUserFromRemote: (cardId: string) => Promise<UserProfile | undefined>;
 };
 
 export const useWalletStore = create<WalletState>((set, get) => ({
@@ -53,7 +44,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     lastTransfer: null,
     lastTopup: null,
     pendingTopupAmount: null,
-    seedDemoData: () => {
+    seedDemoData: async () => {
         const existing = get().usersByCardId;
         if (Object.keys(existing).length > 0) return;
         const now = new Date().toISOString();
@@ -69,12 +60,15 @@ export const useWalletStore = create<WalletState>((set, get) => ({
             pin: '123456',
         };
         set({ usersByCardId: { [destination.cardId]: destination } });
+        try {
+            await saveUserProfile(destination);
+        } catch {}
     },
     getUserByCardId: (cardId) => get().usersByCardId[cardId],
     setSelectedSourceCard: (cardId) => set({ selectedSourceCardId: cardId }),
     setSelectedDestinationCard: (cardId) => set({ selectedDestinationCardId: cardId }),
     setPendingTopupAmount: (amount) => set({ pendingTopupAmount: amount }),
-    registerUser: (cardId, profile) => {
+    registerUser: async (cardId, profile) => {
         const now = new Date().toISOString();
         const user: UserProfile = {
             cardId,
@@ -87,6 +81,10 @@ export const useWalletStore = create<WalletState>((set, get) => ({
             balance: 0,
             pin: profile.pin,
         };
+        // persist to firestore
+        try {
+            await saveUserProfile(user);
+        } catch {}
         set(
             produce<WalletState>((draft) => {
                 draft.usersByCardId[cardId] = user;
@@ -95,7 +93,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
         );
         return user;
     },
-    topup: (cardId, amount) => {
+    topup: async (cardId, amount) => {
         if (amount <= 0) return undefined;
         const user = get().usersByCardId[cardId];
         if (!user) return undefined;
@@ -114,9 +112,13 @@ export const useWalletStore = create<WalletState>((set, get) => ({
                 };
             })
         );
-        return { ...user, balance: user.balance + amount };
+        const updated = { ...user, balance: user.balance + amount };
+        try {
+            await updateUserAmount(cardId, updated.balance);
+        } catch {}
+        return updated;
     },
-    transfer: (sourceCardId, destinationCardId, amount, pin) => {
+    transfer: async (sourceCardId, destinationCardId, amount, pin) => {
         const source = get().usersByCardId[sourceCardId];
         const dest = get().usersByCardId[destinationCardId];
         if (!source || !dest) return false;
@@ -140,7 +142,28 @@ export const useWalletStore = create<WalletState>((set, get) => ({
                 };
             })
         );
+        try {
+            await Promise.all([
+                updateUserAmount(sourceCardId, source.balance - amount),
+                updateUserAmount(destinationCardId, dest.balance + amount),
+            ]);
+        } catch {}
         return true;
+    },
+    loadUserFromRemote: async (cardId) => {
+        try {
+            const remote = await getUserProfile(cardId);
+            if (remote) {
+                set(
+                    produce<WalletState>((draft) => {
+                        draft.usersByCardId[cardId] = remote;
+                    })
+                );
+            }
+            return remote ?? undefined;
+        } catch {
+            return undefined;
+        }
     },
 }));
 
