@@ -8,12 +8,12 @@ import { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'RegisterCardReader'>;
 
 export default function RegisterCardReaderScreen({ navigation }: Props) {
-    const { loadUserFromRemote, usersByCardId } = useWalletStore();
+    const { refreshUserFromRemote, usersByCardId } = useWalletStore();
 
     useEffect(() => {
         onNfcTap(async (cardId) => {
             let existing = usersByCardId[cardId];
-            if (!existing) existing = await loadUserFromRemote(cardId);
+            existing = await refreshUserFromRemote(cardId);
             if (existing) {
                 navigation.replace('RegisterAlreadyRegistered', { cardId });
             } else {
@@ -21,7 +21,7 @@ export default function RegisterCardReaderScreen({ navigation }: Props) {
             }
         });
         return () => clearNfcTap();
-    }, [loadUserFromRemote, navigation, usersByCardId]);
+    }, [refreshUserFromRemote, navigation, usersByCardId]);
 
     return (
         <View style={styles.container}>

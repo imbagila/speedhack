@@ -8,18 +8,16 @@ import { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'AdminCardReader'>;
 
 export default function AdminCardReaderScreen({ navigation }: Props) {
-    const { setSelectedDestinationCard, usersByCardId, pendingTopupAmount, topup, setPendingTopupAmount, loadUserFromRemote } = useWalletStore();
+    const { setSelectedDestinationCard, usersByCardId, pendingTopupAmount, topup, setPendingTopupAmount, refreshUserFromRemote } = useWalletStore();
     const hasProcessedRef = useRef(false);
 
     useEffect(() => {
         onNfcTap(async (cardId) => {
             if (hasProcessedRef.current) return;
-            if (!usersByCardId[cardId]) {
-                const remote = await loadUserFromRemote(cardId);
-                if (!remote) {
-                    Alert.alert('Card not registered', 'This card is not registered yet.');
-                    return;
-                }
+            const remote = await refreshUserFromRemote(cardId);
+            if (!remote) {
+                Alert.alert('Card not registered', 'This card is not registered yet.');
+                return;
             }
             setSelectedDestinationCard(cardId);
             if (pendingTopupAmount && pendingTopupAmount > 0) {
@@ -32,7 +30,7 @@ export default function AdminCardReaderScreen({ navigation }: Props) {
             }
         });
         return () => clearNfcTap();
-    }, [navigation, pendingTopupAmount, setPendingTopupAmount, setSelectedDestinationCard, topup, usersByCardId, loadUserFromRemote]);
+    }, [navigation, pendingTopupAmount, setPendingTopupAmount, setSelectedDestinationCard, topup, usersByCardId, refreshUserFromRemote]);
 
     return (
         <View style={styles.container}>

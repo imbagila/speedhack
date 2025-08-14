@@ -1,5 +1,5 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore';
 import Constants from 'expo-constants';
 import type { UserProfile, Gender } from '../types/user';
 
@@ -94,6 +94,23 @@ export async function updateUserAmount(cardId: string, amount: number): Promise<
     const { db } = usersCollection();
     const ref = doc(db, COLLECTION_NAME, cardId);
     await updateDoc(ref, { amount });
+}
+
+export function subscribeUserProfile(
+    cardId: string,
+    onData: (user: UserProfile | null) => void
+): () => void {
+    const { db } = usersCollection();
+    const ref = doc(db, COLLECTION_NAME, cardId);
+    const unsub = onSnapshot(ref, (snap) => {
+        if (snap.exists()) {
+            const data = snap.data() as FirestoreUser;
+            onData(mapFromFirestore(data));
+        } else {
+            onData(null);
+        }
+    });
+    return unsub;
 }
 
 

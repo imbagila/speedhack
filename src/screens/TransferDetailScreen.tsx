@@ -50,6 +50,8 @@ export default function TransferDetailScreen({ route, navigation }: Props) {
                     const ok = await transfer(sourceCardId, destinationCardId, amt, pin);
                     if (ok) {
                         navigation.replace('TransferSuccess');
+                    } else {
+                        Alert.alert('Invalid PIN', 'The PIN you entered is incorrect.');
                     }
                 }}
             >

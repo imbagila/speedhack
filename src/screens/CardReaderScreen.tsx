@@ -8,17 +8,14 @@ import { RootStackParamList } from '../navigation/types';
 type Props = NativeStackScreenProps<RootStackParamList, 'CardReader'>;
 
 export default function CardReaderScreen({ navigation }: Props) {
-    const { getUserByCardId, setSelectedSourceCard, loadUserFromRemote } = useWalletStore();
+    const { getUserByCardId, setSelectedSourceCard, refreshUserFromRemote } = useWalletStore();
 
     useEffect(() => {
         let isActive = true;
         onNfcTap(async (cardId) => {
             if (!isActive) return;
             setSelectedSourceCard(cardId);
-            let existing = getUserByCardId(cardId);
-            if (!existing) {
-                existing = await loadUserFromRemote(cardId);
-            }
+            let existing = await refreshUserFromRemote(cardId);
             if (existing) {
                 navigation.replace('Profile', { cardId });
             } else {
@@ -29,7 +26,7 @@ export default function CardReaderScreen({ navigation }: Props) {
             isActive = false;
             clearNfcTap();
         };
-    }, [getUserByCardId, navigation, setSelectedSourceCard, loadUserFromRemote]);
+    }, [getUserByCardId, navigation, setSelectedSourceCard, refreshUserFromRemote]);
 
     return (
         <View style={styles.container}>

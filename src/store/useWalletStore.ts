@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { produce } from 'immer';
-import { saveUserProfile, updateUserAmount, getUserProfile } from '../utils';
+import { saveUserProfile, updateUserAmount, getUserProfile, subscribeUserProfile } from '../utils';
 import type { UserProfile, Gender } from '../types/user';
 
 
@@ -19,6 +19,7 @@ type LastTopup = {
 
 type WalletState = {
     usersByCardId: Record<string, UserProfile>;
+    subscriptionsByCardId: Partial<Record<string, () => void>>;
     selectedSourceCardId: string | null;
     selectedDestinationCardId: string | null;
     lastTransfer: LastTransfer | null;
@@ -35,10 +36,14 @@ type WalletState = {
     transfer: (sourceCardId: string, destinationCardId: string, amount: number, pin: string) => Promise<boolean>;
     // firestore sync
     loadUserFromRemote: (cardId: string) => Promise<UserProfile | undefined>;
+    subscribeToUser: (cardId: string) => void;
+    unsubscribeFromUser: (cardId: string) => void;
+    refreshUserFromRemote: (cardId: string) => Promise<UserProfile | null>;
 };
 
 export const useWalletStore = create<WalletState>((set, get) => ({
     usersByCardId: {},
+    subscriptionsByCardId: {},
     selectedSourceCardId: null,
     selectedDestinationCardId: null,
     lastTransfer: null,
@@ -144,6 +149,54 @@ export const useWalletStore = create<WalletState>((set, get) => ({
             return remote ?? undefined;
         } catch {
             return undefined;
+        }
+    },
+    subscribeToUser: (cardId) => {
+        const current = get().subscriptionsByCardId[cardId];
+        if (current) return;
+        const unsub = subscribeUserProfile(cardId, (u) => {
+            set(
+                produce<WalletState>((draft) => {
+                    if (u) {
+                        draft.usersByCardId[cardId] = u;
+                    } else {
+                        delete draft.usersByCardId[cardId];
+                    }
+                })
+            );
+        });
+        set(
+            produce<WalletState>((draft) => {
+                draft.subscriptionsByCardId[cardId] = unsub;
+            })
+        );
+    },
+    unsubscribeFromUser: (cardId) => {
+        const current = get().subscriptionsByCardId[cardId];
+        if (current) {
+            current();
+            set(
+                produce<WalletState>((draft) => {
+                    delete draft.subscriptionsByCardId[cardId];
+                })
+            );
+        }
+    },
+    refreshUserFromRemote: async (cardId) => {
+        try {
+            const remote = await getUserProfile(cardId);
+            set(
+                produce<WalletState>((draft) => {
+                    if (remote) {
+                        draft.usersByCardId[cardId] = remote;
+                    } else {
+                        delete draft.usersByCardId[cardId];
+                    }
+                })
+            );
+            return remote ?? null;
+        } catch {
+            return null;
         }
     },
 }));

@@ -1,3 +1,3 @@
-export { getUserProfile, saveUserProfile, updateUserAmount } from './firestore';
+export { getUserProfile, saveUserProfile, updateUserAmount, subscribeUserProfile } from './firestore';
 
 
