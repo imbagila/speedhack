@@ -35,6 +35,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            android/.gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -44,11 +55,13 @@ jobs:
       - name: Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Run clean build (debug)
-        run: pnpm run run.clean
+      - name: Assemble debug APK (no clean)
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
 
-      - name: Build release
-        run: pnpm run build.clean
+      - name: Assemble release APK (no clean)
+        working-directory: android
+        run: ./gradlew assembleRelease --stacktrace
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
