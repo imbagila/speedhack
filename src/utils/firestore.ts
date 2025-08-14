@@ -1,5 +1,6 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import Constants from 'expo-constants';
 import type { UserProfile, Gender } from '../types/user';
 
 let cachedApp: FirebaseApp | null = null;
@@ -8,14 +9,15 @@ function getApp(): FirebaseApp {
     if (cachedApp) return cachedApp;
     // Expect env vars provided via app.json -> expo constants or native config
     const env = (globalThis as any)?.process?.env ?? {};
+    const fromExtra = (Constants?.expoConfig as any)?.extra?.firebase ?? {};
     const firebaseConfig = {
-        apiKey: env.EXPO_PUBLIC_FIREBASE_API_KEY,
-        authDomain: env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        projectId: env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-        storageBucket: env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-        appId: env.EXPO_PUBLIC_FIREBASE_APP_ID,
-        measurementId: env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
+        apiKey: env.EXPO_PUBLIC_FIREBASE_API_KEY ?? fromExtra.apiKey,
+        authDomain: env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN ?? fromExtra.authDomain,
+        projectId: env.EXPO_PUBLIC_FIREBASE_PROJECT_ID ?? fromExtra.projectId,
+        storageBucket: env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET ?? fromExtra.storageBucket,
+        messagingSenderId: env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? fromExtra.messagingSenderId,
+        appId: env.EXPO_PUBLIC_FIREBASE_APP_ID ?? fromExtra.appId,
+        measurementId: env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID ?? fromExtra.measurementId,
     } as const;
     cachedApp = initializeApp(firebaseConfig as any);
     return cachedApp;
